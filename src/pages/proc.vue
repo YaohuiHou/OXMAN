@@ -5,7 +5,7 @@
         <div class="logo" @click="back">
           <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/back.png"></image>
         </div>
-        <div class="add-btn" @click="jump('/aution')">
+        <div class="add-btn" @click="share">
           <image class="top-image" src="https://s.kcimg.cn/app/icon/oxman/shll.png"></image>
         </div>
       </div>
@@ -19,7 +19,7 @@
           <text class="top-use-name">{{DATA.bu_name}}</text>
           <div v-if="DATA.wactchtype == '0'" class="top-right-box">
 
-            <div v-if="!DATA.bu_isupvote" 
+            <div v-if="!DATA.bu_isupvote"
             @click="zanAsy"
             class="top-zan-box top-mr">
               <image class="top-use-image" src="https://s.kcimg.cn/app/icon/oxman/zans.png"></image>
@@ -103,6 +103,7 @@
   import ListCentent from '../components/list-centent.vue'
   import XHR from '../api'
   const modal = weex.requireModule('modal')
+  const THAW = weex.requireModule('THAW')
   export default {
     components: { ListCentent },
     data (){
@@ -120,6 +121,14 @@
       this.loadList()
     },
     methods: {
+      share(){
+        THAW.onShowShare({
+            title: this.DATA.bu_name + "的牛人主页", // 分享标题
+            desc: "", // 分享描述
+            link: '/proc?'+ this.DATA.bu_id, // 分享链接
+            imgUrl: this.DATA.bu_imgsrc // 分享图标
+        });
+      },
       myMsg(txt){
         if(this.DATA.wactchtype == '1'){
           if(txt == '1'){

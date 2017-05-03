@@ -40,7 +40,11 @@
     methods: {
       //单个关注
       singleFollowed(type,id,index){
-        let nbbsid = [`${id}`]
+        // // 判断去登录
+        // if(this.$getConfig().userId <= 0){
+        //   weex.requireModule('THAW').onGoLogin();
+        // }
+        let nbbsid = [id]
         XHR.postAttention({
           type:type,watchtype:1,
           nbbsid:JSON.stringify(nbbsid),
@@ -87,4 +91,3 @@
   .altClsBox{width: 60px; height:60px; border-radius: 60px; border-width: 2px; border-color: #fff;border-style: solid; margin-top: 60px;justify-content: center;align-items:center;}
   .alertClox{ width: 30px; height:30px; -webkit-transform:rotate(45deg);}
 </style>
-

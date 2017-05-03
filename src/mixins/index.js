@@ -6,7 +6,12 @@ export default {
       }
     },
     back (){
-        this.$router.back()
+        let thaw = weex.requireModule('THAW');
+        if(this.$router && this.$route.path != "/home"){
+          this.$router.back();
+        }else{
+          thaw.onGoBack();
+        }
     }
   }
 }

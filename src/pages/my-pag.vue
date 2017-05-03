@@ -6,7 +6,7 @@
         <text class="min-title">{{DATA.bu_title}}</text>
 
         <div class="min-btn-box">
-          <image class="min-pic" 
+          <image class="min-pic"
             :src="DATA.bu_authorimgurl"
             @click="jump({path:'/proc',query:{id: DATA.bu_authorid}})"></image>
 
@@ -43,7 +43,7 @@
         <div class="commit-s"></div>
         <text class="commit-m">评论</text>
       </div>
-      
+
       <div class="com-item-box" v-for="(items, index) in COMDATA">
         <image class="com-item-pic" :src="items.headpic"></image>
         <div class="com-item-right">
@@ -113,10 +113,10 @@
     created () {
       this.getNewsMsg()
       this.getTopic()
-      
+
     },
     methods: {
-      hideForm (tp) { 
+      hideForm (tp) {
         if (tp > -1) {
           this.cengCom = true
           this.cengIndex = tp
@@ -167,12 +167,12 @@
             })
           }
         })
-        
+
       },
       //单个关注
       singleFollowed(type){
         let self = this
-        let nbbsid = [`${this.DATA.bu_id}`];
+        let nbbsid = [this.DATA.bu_id];
         XHR.postAttention({type:type,watchtype:3,nbbsid:JSON.stringify(nbbsid),UA:this.$getConfig().UA}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.DATA.bu_isfollower = !self.DATA.bu_isfollower

@@ -91,7 +91,7 @@
       })
 
       this.getNbArtList()
-      
+
     },
     methods: {
       //获取圈子列表
@@ -154,9 +154,8 @@
         json.bu_title = obj.subject
         json.bu_authorid = obj.authorid
         json.bu_author = obj.author
-        json.bu_mainimgjson = `["${obj.images[0]}"]`
+        json.bu_mainimgjson = obj.images.length == 0 ? '[]' : `["${obj.images[0]}"]`
         json.UA = this.$getConfig().UA
-        // console.log(obj,inx)
         XHR.postPushAsyn(json).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             self.CircleList[inx].sync = true

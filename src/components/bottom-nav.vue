@@ -13,7 +13,7 @@
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/call.png"></image>
       <text class="btm-txt">{{SUM}}</text>
     </div>
-    <div class="btm-nav">
+    <div class="btm-nav" @click="shares">
       <image class="btm-ico" src="https://s.kcimg.cn/app/icon/oxman/shee.png"></image>
       <text class="btm-txt">{{DATA.bu_share}}</text>
     </div>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  
+let THAW = weex.requireModule('THAW');
   export default {
     props:{
       DATA: Object,
@@ -39,7 +39,15 @@
       }
     },
     methods: {
-
+      shares(){
+        //   native操作  分享
+          THAW.onShowShare({
+              title: this.DATA.bu_title, // 分享标题
+              desc: "", // 分享描述
+              link: this.$getConfig().shareUrl + 'pages?id=' + this.DATA.bu_articleid + "&tp=" , // 分享链接
+              imgUrl: this.DATA.bu_authorimgurl == '' ? "https://s.kcimg.cn/app/icon/oxman/shll.png" : this.DATA.bu_authorimgurl// 分享图标
+          });
+      }
     }
   }
 </script>

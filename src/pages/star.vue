@@ -18,7 +18,6 @@
         <str-item v-if="isLogin" :followedList="followedList"></str-item>
       </div>
     </div>
-
     <div v-if="followedSuccessShow" class="oneAlert">
       <image class="alertImg" src="https://s.kcimg.cn/app/icon/oxman/alert.png"></image>
       <div class="altClsBox" @click="closeFollowedSuccess">
@@ -61,6 +60,8 @@
         RecommendAttentionShow:false,
 //        关注成功弹层
         followedSuccessShow:false,
+        //是否显示我的
+        attestation:false
       }
     },
     created(){
@@ -110,7 +111,7 @@
       },
       //去登陆
       goLogin(){
-
+        weex.requireModule('THAW').onGoLogin();
       },
       //请求接口列表
       getFollowed(){

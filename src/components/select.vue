@@ -6,16 +6,14 @@
         append="tree"
         :index="i"
         class="row">
-
-        <text :class="selt(types,v.bu_categoryname)" @click="opect(i,v.bu_categoryname)">{{v.bu_categoryname}}</text>
-
+        <text @click="opect(v.bu_categoryid,v.bu_categoryname)" class="item-title" :class="types == v.bu_categoryname ? [' bule'] : ['']">{{ v.bu_categoryname }}</text>
       </cell>
     </list>
   </div>
 </template>
 
 <script>
-  
+
   export default {
     props:{
       DATA: Array,
@@ -24,9 +22,6 @@
     methods: {
       opect (nb,content) {
         this.$emit('hideSlt',nb,content)
-      },
-      selt(typs,ids){
-        return typs == ids ? 'item-title bule' : 'item-title'
       }
     }
   }
@@ -38,6 +33,6 @@
 .alertImg{ width: 750px; height: 400px; background-color: #fff; justify-content: center;align-items:center;}
 
 .row{width: 750px; height:80px; border-bottom-width: 2px; border-bottom-color: #f5f5f5;border-bottom-style: solid;justify-content: center;align-items:center;}
-.item-title{ font-size: 30px; color: #333; text-align: center; line-height: 80px;}
+.item-title{width: 750px; font-size: 30px; color: #333; text-align: center; line-height: 80px;}
 .bule{color: #2B61FF;}
 </style>

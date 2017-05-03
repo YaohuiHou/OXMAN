@@ -1,7 +1,7 @@
 <template>
   <div class="commont-view">
     <w-header v-if="headerType==1" titles="牛人认证"></w-header>
-    <app-header v-else show="3"></app-header>
+    <app-header v-else :show="show"></app-header>
 
     <div class="pop-box">
 
@@ -12,7 +12,7 @@
         </div>
         <text class="pop-name">上传头像</text>
       </div>
-      
+
     </div>
 
     <div class="input-box">
@@ -36,7 +36,7 @@
       <image class="input-picos" src="https://s.kcimg.cn/app/icon/oxman/backs.png"></image>
     </div>
 
-    <div :class="['button','mt60',submitDisabled?'':'buts']" @click="submitData">
+    <div :class="['button','mt60','buts']" @click="submitData">
       <text class="but-txt">提交</text>
     </div>
 
@@ -50,6 +50,7 @@
   import SelectOps from '../components/select.vue'
   import router from '../router'
   const modal = weex.requireModule('modal')
+  let globalEvent = weex.requireModule('globalEvent');
   // const picker = weex.requireModule('picker')
   import XHR from '../api'
   export default {
@@ -58,12 +59,12 @@
       return {
         selectOk: false,
         //1：认证  2：修改资料
-        headerType:2,
+        headerType:1,
         //提交资料
         Data:{
           UA:'',
           //头像
-          bu_facelogo:'https://avatars0.githubusercontent.com/u/25260977?v=3&s=460',
+          bu_facelogo:'https://i.kcimg.cn/data/avatar/noavatar_big.gif-120x120.jpg',
           //姓名
           bu_manname:'',
           //电话
@@ -81,12 +82,13 @@
         select: [],
 
         //提交按钮状态
-        submitDisabled:true,
+        submitDisabled:false,
         logo:'',
         name:'',
         phone:'',
         msg:'',
         cateid:'',
+        show : "1"
 
       }
     },
@@ -96,11 +98,9 @@
       this.Data.UA = this.$getConfig().UA;
 
 //      如果是修改个人资料，请求个人资料数据
-      if(this.headerType == 2){
-        XHR.getNbInfo({'nbuid':255792}).then((ele) => {
+        XHR.getNbInfo({'nbuid':this.$getConfig().userId}).then((ele) => {
           if(ele.ok && ele.data.status == 1){
             let NbInfo = ele.data.data[0];
-
             this.Data.bu_facelogo = NbInfo.bu_imgsrc;
             this.Data.bu_manname = NbInfo.bu_name;
             this.Data.bu_manphone = NbInfo.bu_manphone;
@@ -108,9 +108,29 @@
             this.Data.bu_categoryid = NbInfo.bu_categoryid;
             this.typeVal = NbInfo.bu_categoryname;
             this.buttonState()
+
+            this.headerType = 2
+            this.show = 3
+          }else{
+            this.headerType = 1
+            this.show = 1
           }
         })
-      }
+      // 登录
+      if(this.$getConfig().userId <= 0){
+        weex.requireModule('THAW').onGoLogin();
+        // globalEvent.addEventListener('onGoLoginCallBack',function(data){
+        //   modal.toast({
+        //     message: data,
+        //     duration: 100
+        //   })
+        // })
+      };
+      // 上传图片
+      globalEvent.addEventListener('chooseImageCallBack',(res) => {
+        this.Data.bu_facelogo =  res.imageUpload;
+      });
+
     },
     methods: {
       alert (text) {
@@ -124,7 +144,6 @@
         if(nb == 'fold'){
           XHR.getTagAttributes().then((ele) => {
             if(ele.ok && ele.data.status == 1){
-              console.log(ele.data)
               this.select = ele.data.data;
             }
           })
@@ -141,7 +160,6 @@
       },
       //编辑资料
       addInfo(type){
-        console.log(event.value)
         if(type == 'name'){
           this.Data.bu_manname = event.value;
         }else if(type == 'intro'){
@@ -159,20 +177,22 @@
         }
       },
       submitData(){
-        if(this.submitDisabled){
-          return
-        }
+        // if(this.submitDisabled){
+        //   return
+        // }
         let type = 'postNbAuthentication';
         //如果是修改个人资料，提交修改个人资料数据
         if(this.headerType ==2){
           type = 'getEditNBMan';
         }
         XHR[type](this.Data).then((ele) => {
-          if (ele.ok) {
+          if (ele.ok && ele.data.status == 1) {
             this.alert('修改成功');
             this.$nextTick(function(){
               router.go(-1)
             })
+          }else{
+            this.alert(ele.data.msg)
           }
         })
 
@@ -202,16 +222,19 @@
       },
 //      上传图片
       loadHeadPortrait(){
-       
+        //   native操作
+        weex.requireModule('THAW').chooseImage();
+
+
       }
     }
   }
 </script>
 <style scoped>
   .commont-view {background-color: #fff;}
-  
+
   .mt60{margin-top: 120px;}
-  
+
   .pop-box{
     height: 314px;
     margin-top: 20px;

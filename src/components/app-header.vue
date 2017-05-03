@@ -11,7 +11,7 @@
       <div class="link" @click="jump('/star')">
         <text :class="show == 2 ? ['active'] : ['title']">关注</text>
       </div>
-      <div v-if="userInfoShow" class="link" @click="jump('/myrom')">
+      <div v-if="!attestation" class="link" @click="jump('/myrom')">
         <text :class="show == 3 ? ['active'] : ['title']">我的</text>
       </div>
     </div>
@@ -23,6 +23,8 @@
 </template>
 <script>
 const THAW = weex.requireModule('THAW')
+const modal = weex.requireModule('modal')
+import XHR from '../api'
   export default {
     props: {
       show: {
@@ -33,24 +35,44 @@ const THAW = weex.requireModule('THAW')
     data(){
       return{
          //如果未登录 隐藏我的信息
-        userInfoShow:false
+        attestation:true
       }
     },
     created(){
+      // this.getManInfo()
       //如果用户未登录
-      if(this.$getConfig().userId == 0){
-        this.userInfoShow = false
-      }else{
-        this.userInfoShow = true
-      }
+      // if(this.$getConfig().userId == 0){
+      //   this.userInfoShow = false
+      // }else{
+      //   this.userInfoShow = true
+      // }
+      // 判断是否注册
+      this.getManInfo()
+
     },
     methods: {
+      getManInfo () {
+        let self = this
+        XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
+          if( res.data.status == '1'){
+            self.attestation = false
+          }else{
+            self.attestation = true
+          }
+        })
+      },
+      alert (text) {
+        modal.toast({
+          message: text,
+          duration: 0.8
+        })
+      },
       shares(){
-        //   native操作
-          THAW.onMenuShare({
-              title: "ddd", // 分享标题
-              desc: "ddd", // 分享描述
-              link: "https://s.kcimg.cn/app/icon/oxman/shll.png", // 分享链接
+        //   native操作  分享
+          THAW.onShowShare({
+              title: "卡车之家牛人平台", // 分享标题
+              desc: "", // 分享描述
+              link: '', // 分享链接
               imgUrl: "https://s.kcimg.cn/app/icon/oxman/shll.png" // 分享图标
           });
       }

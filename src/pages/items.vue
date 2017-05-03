@@ -46,7 +46,7 @@
     },
     methods: {
       loadList(){
-        
+
         let json = {}
         json.nbuid = this.$route.query.id
         json.currentPage = this.page

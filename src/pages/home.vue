@@ -47,40 +47,46 @@
         noLoading: false,
         userid:'',
         userName:'',
-        
+
         hot: [],
         page:'',
         indexDATA:[],
         //是否显示认证
-        attestation:false,
+        attestation:false
       }
     },
     created () {
       // const me = this
       // const THAW = weex.requireModule('thaw')
-      // THAW.onGetData('1',function(ret) {  
+      // THAW.onGetData('1',function(ret) {
       //     me.userid = ret.userid
       //     me.userName = ret.userName
       // }
 
+      this.getManInfo()
       this.getEverHot()
       this.getIndexAsy()
 
-      //如果用户未登录
-      if(this.$getConfig().userId == 0){
-
-      }else{
-        this.attestation = true
-      }
 
     },
     methods: {
+      getManInfo () {
+        let self = this
+        XHR.getManInfo({'nbuid': this.$getConfig().userId }).then( (res) => {
+          if( res.data.status == '1'){
+            self.attestation = false
+          }else{
+            self.attestation = true
+          }
+        })
+      },
       getEverHot () {
         let self = this
         XHR.getEveryDay().then( (res) => {
           if( res.data.status == '1'){
             self.hot = res.data.data
           }
+          // 隐藏正在加载
           THAW.onHideLoading()
         })
       },

@@ -18,7 +18,7 @@ const B_HTTP_DEV = 'https://circle-api-yufabu.360che.com/'
 const B_HTTP = 'https://circle-api.360che.com/'
 
 
-const DEBUG = true                         // 是否开发模式
+const DEBUG = false                         // 是否开发模式
 
 const URLS = DEBUG ? HTTP_DEV : HTTP_PRO
 
@@ -278,14 +278,14 @@ class XHR {
 
 
 
-    ////上传图片
-    //PostHeadPortrait(json){
+    // //上传图片
+    // PostHeadPortrait(json){
     //    return fetch({
     //        url: `${URLS}/api/nr/Index/PostUploadToken`,
     //        body:json,
     //        type:'POST'
     //    })
-    //}
+    // }
 
 }
 
